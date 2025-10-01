@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" itemscope itemtype="http://schema.org/WebPage">
+  <body>
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha384-1H217gwSVyLSIfaLxHbE7dRb3v4mYCKbpQvzx0cegeju1MVsGrX5xXxAvs/HgeFs" crossorigin="anonymous"></script>
+  <form id="myForm"> 
+  <label for="category">Category</label>
+  <select name="inputs[category]" id="category">
+    <!-- <option value="">--Please choose a category--</option> -->
+    <option value="Health">Health</option>
+    <option value="Weather">Weather</option>
+  </select>
+  <br>
+  <label for="module-description">Description</label>
+  <input type="text" id="module-description" name="inputs[module-description]" required minlength="4" maxlength="100" value="abcd"/>
+  <br>
+  <label for="module-url">Url</label>
+  <input type="text" id="module-url" name="inputs[module-url]" required minlength="4" maxlength="100" value="https://gitlab.com/khassel/mm-add-project"/>
+  <input type="hidden" id="TASK" name="variables[TASK]" readonly value="module"/>
+  <br>
+  <button type="submit">submit</button>
+  </form>
+  <div id="status">...</div>
+  <script>
+  $(document).ready(function(){
+    $('#myForm').submit(function (event){
+      event.preventDefault();
+      var formData = $(this).serialize();
+      $.ajax({
+        url: "https://gitlab.com/api/v4/projects/74910162/trigger/pipeline?token=glptt-f1fc3d067a89f5be5ae0cffe8ec94edd63d0d7c8&ref=master",
+        data: formData,
+        type: "post",
+        success: function (response) {
+          document.getElementById("status").innerHTML = 'pipeline is launched, verify on <a href="https://gitlab.com/khassel/mm-add-project/-/pipelines">gitlab</a>';
+        },
+        error: function (response) {
+          document.getElementById("status").innerHTML = 'sorry, pipeline errored, more info on <a href="https://gitlab.com/khassel/mm-add-project/-/pipelines">gitlab</a>';
+        }
+      });
+    });
+  });
+  </script>
+  </body>
+</html>
