@@ -3,18 +3,18 @@
   <body>
   <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha384-1H217gwSVyLSIfaLxHbE7dRb3v4mYCKbpQvzx0cegeju1MVsGrX5xXxAvs/HgeFs" crossorigin="anonymous"></script>
   <form id="myForm"> 
-  <label for="category">Category</label>
-  <select name="inputs[category]" id="category">
+  <label for="MOD_CAT">Category</label>
+  <select name="variables[MOD_CAT]" id="MOD_CAT">
     <!-- <option value="">--Please choose a category--</option> -->
     <option value="Health">Health</option>
     <option value="Weather">Weather</option>
   </select>
   <br>
-  <label for="module-description">Description</label>
-  <input type="text" id="module-description" name="inputs[module-description]" required minlength="4" maxlength="100" value="abcd"/>
+  <label for="MOD_DESC">Description</label>
+  <input type="text" id="MOD_DESC" name="variables[MOD_DESC]" required minlength="4" maxlength="100" value="abcd"/>
   <br>
-  <label for="module-url">Url</label>
-  <input type="text" id="module-url" name="inputs[module-url]" required minlength="4" maxlength="100" value="https://gitlab.com/khassel/mm-add-project"/>
+  <label for="MOD_URL">Url</label>
+  <input type="text" id="MOD_URL" name="variables[MOD_URL]" required minlength="4" maxlength="100" value="https://gitlab.com/khassel/mm-add-project"/>
   <input type="hidden" id="TASK" name="variables[TASK]" readonly value="module"/>
   <br>
   <button type="submit">submit</button>
