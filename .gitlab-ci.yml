@@ -9,9 +9,9 @@ pages:
     - echo "deploying to pages"
   artifacts:
     paths:
-      - site
+      - public
   rules:
-    - if: $CI_COMMIT_BRANCH == "master" && $TASK == "pages" && $CI_PIPELINE_SOURCE =~ /^(schedule|web|trigger)$/
+    - if: $CI_COMMIT_BRANCH == "master" && $TASK == "pages" && $CI_PIPELINE_SOURCE =~ /^(schedule|web)$/
 
 add_module:
   stage: build
