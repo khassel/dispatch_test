@@ -16,6 +16,9 @@
   <label for="MOD_URL">Url</label>
   <input type="text" id="MOD_URL" name="MOD_URL" required minlength="4" maxlength="100" value="https://github.com/khassel/dispatch_test"/>
   <br>
+  <label for="TOKEN">Github-Token</label>
+  <input type="text" id="TOKEN" name="TOKEN" required minlength="4" maxlength="100"/>
+  <br>
   <button type="submit">submit</button>
   </form>
   <div id="status">...</div>
@@ -33,7 +36,7 @@
       console.dir(json);
       $.ajax({
         headers: {
-          "Authorization": "Bearer <YOUR-TOKEN>",
+          "Authorization": "Bearer " + $('#TOKEN').val(),
           "Accept": "application/vnd.github+json",
           "X-GitHub-Api-Version": "2022-11-28"
         },
@@ -42,10 +45,10 @@
         type: "POST",
         dataType: "json",
         success: function(data) {
-            console.log(`Success: ${data}`);
+          document.getElementById("status").innerHTML = 'Workflow is launched, verify on <a href="https://github.com/khassel/dispatch_test/actions">Github</a>';
         },
         error: function(data) {
-            console.log(`Error: ${data}`);
+          document.getElementById("status").innerHTML = 'Sorry, workflow errored, for more infos check the console or visit <a href="https://github.com/khassel/dispatch_test/actions">Github</a>';
         }
       });
     });
