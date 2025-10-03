@@ -4,18 +4,17 @@
   <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha384-1H217gwSVyLSIfaLxHbE7dRb3v4mYCKbpQvzx0cegeju1MVsGrX5xXxAvs/HgeFs" crossorigin="anonymous"></script>
   <form id="myForm"> 
   <label for="MOD_CAT">Category</label>
-  <select name="variables[MOD_CAT]" id="MOD_CAT">
+  <select name="MOD_CAT" id="MOD_CAT">
     <!-- <option value="">--Please choose a category--</option> -->
     <option value="Health">Health</option>
     <option value="Weather">Weather</option>
   </select>
   <br>
   <label for="MOD_DESC">Description</label>
-  <input type="text" id="MOD_DESC" name="variables[MOD_DESC]" required minlength="4" maxlength="100" value="abcd"/>
+  <input type="text" id="MOD_DESC" name="MOD_DESC" required minlength="4" maxlength="100" value="abcd"/>
   <br>
   <label for="MOD_URL">Url</label>
-  <input type="text" id="MOD_URL" name="variables[MOD_URL]" required minlength="4" maxlength="100" value="https://gitlab.com/khassel/mm-add-project"/>
-  <input type="hidden" id="TASK" name="variables[TASK]" readonly value="module"/>
+  <input type="text" id="MOD_URL" name="MOD_URL" required minlength="4" maxlength="100" value="https://github.com/khassel/dispatch_test"/>
   <br>
   <button type="submit">submit</button>
   </form>
@@ -24,16 +23,29 @@
   $(document).ready(function(){
     $('#myForm').submit(function (event){
       event.preventDefault();
-      var formData = $(this).serialize();
+      const json = {"event_type":"add_module",
+        "client_payload":{
+          "category":$('#MOD_CAT').val(),
+          "description":$('#MOD_DESC').val(),
+          "url":$('#MOD_URL').val()
+        }
+      };
+      console.dir(json);
       $.ajax({
-        url: "https://gitlab.com/api/v4/projects/74910162/trigger/pipeline?token=glptt-f1fc3d067a89f5be5ae0cffe8ec94edd63d0d7c8&ref=master",
-        data: formData,
-        type: "post",
-        success: function (response) {
-          document.getElementById("status").innerHTML = 'pipeline is launched, verify on <a href="https://gitlab.com/khassel/mm-add-project/-/pipelines">gitlab</a>';
+        headers: {
+          "Authorization": "Bearer <YOUR-TOKEN>",
+          "Accept": "application/vnd.github+json",
+          "X-GitHub-Api-Version": "2022-11-28"
         },
-        error: function (response) {
-          document.getElementById("status").innerHTML = 'sorry, pipeline errored, more info on <a href="https://gitlab.com/khassel/mm-add-project/-/pipelines">gitlab</a>';
+        url: "https://api.github.com/repos/khassel/dispatch_test/dispatches",
+        data: JSON.stringify(json),
+        type: "POST",
+        dataType: "json",
+        success: function(data) {
+            console.log(`Success: ${data}`);
+        },
+        error: function(data) {
+            console.log(`Error: ${data}`);
         }
       });
     });
