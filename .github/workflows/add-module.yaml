@@ -19,18 +19,16 @@ jobs:
           echo "======================================================"
           set | grep -E "name=|category=|url=|id=|maintainer=|maintainerURL=|description="
           echo "======================================================"
-          jqurl="$(curl -s https://api.github.com/repos/itchyny/gojq/releases/latest | sed -rn 's|.*browser_download_url": "(.*amd64.tar.gz)".*|\1|p')"
-          curl -sL --output gojq.tar.gz "$jqurl"
-          tar -zxf gojq.tar.gz
-          cp ./gojq_*/gojq /usr/local/bin/
+          sudo apt-get update
+          sudo apt-get install -y jq
           json="$(cat module.json \
-            | gojq '.name |= "'"$name"'"' \
-            | gojq '.category |= "'"$category"'"' \
-            | gojq '.url |= "'"$url"'"' \
-            | gojq '.id |= "'"$id"'"' \
-            | gojq '.maintainer |= "'"$maintainer"'"' \
-            | gojq '.maintainerURL |= "'"$maintainerURL"'"' \
-            | gojq '.description |= "'"$description"'"' \
+            | jq '.name |= "'"$name"'"' \
+            | jq '.category |= "'"$category"'"' \
+            | jq '.url |= "'"$url"'"' \
+            | jq '.id |= "'"$id"'"' \
+            | jq '.maintainer |= "'"$maintainer"'"' \
+            | jq '.maintainerURL |= "'"$maintainerURL"'"' \
+            | jq '.description |= "'"$description"'"' \
             )"
           echo "$json"
           status="$(curl -s -o /dev/null -w "%{http_code}" "$url")"
@@ -40,3 +38,5 @@ jobs:
             echo "url responds with status code $status"
             exit 1
           fi
+          jq --argjson p "$json" '.modules += [$p]' modules.stage.1.json > modules.stage.1.json
+          git status
