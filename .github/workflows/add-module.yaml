@@ -2,6 +2,9 @@ on:
   repository_dispatch:
     types: [add_module]
 
+permissions:
+  contents: write
+
 jobs:
   addmodule:
     runs-on: ubuntu-latest
@@ -38,5 +41,16 @@ jobs:
             echo "url responds with status code $status"
             exit 1
           fi
-          jq --argjson p "$json" '.modules += [$p]' modules.stage.1.json > modules.stage.1.json
-          git status
+          existurl="$(jq -r '.modules[] | select(.url=="'$url'") | .url' modules.stage.1.json)"
+          if [[ -n "$existurl" ]]; then
+            echo "url $url exists already"
+            exit 1
+          fi
+          git config --global user.email "you@example.com"
+          git config --global user.name "auto-add-module"
+          newcontent="$(jq --argjson p "$json" '.modules += [$p]' modules.stage.1.json)"
+          echo "$newcontent" > modules.stage.1.json
+          git diff
+          git add modules.stage.1.json
+          git commit -m "add new module $url"
+          git push $GITHUB_SERVER_URL/$GITHUB_REPOSITORY HEAD:master
